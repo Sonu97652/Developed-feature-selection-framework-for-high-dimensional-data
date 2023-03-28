@@ -1,0 +1,57 @@
+<mat-drawer-container
+  class="example-container"
+  hasBackdrop="false"
+  style="min-height: 100vh"
+>
+  <mat-drawer #drawer mode="side" opened="true" style="width: 250px;">
+    <div  style="margin: 0px; padding: 5px" class="flex-row active">
+      <img src="/favicon.ico" alt="" srcset="" />
+      <h1 style="margin: 0px; padding: 5px">
+        Feature Selection
+      </h1>
+    </div>
+    <mat-action-list>
+      <mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon style="margin: 0 10px">info</mat-icon> About
+      </mat-list-item>
+      <mat-list-item routerLink="data-sets" routerLinkActive="active">
+        <mat-icon style="margin: 0 10px">storage</mat-icon> Data Sets
+      </mat-list-item>
+      <mat-list-item routerLink="create-comp" routerLinkActive="active">
+        <mat-icon style="margin: 0 10px">create_new_folder</mat-icon> Create
+        Comparison
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon style="margin: 0 10px">query_stats</mat-icon> Comparisons
+      </mat-list-item>
+    </mat-action-list>
+  </mat-drawer>
+  <!-- <mat-toolbar>
+    <mat-toolbar-row>
+      <button mat-button mat-icon-button (click)="drawer.toggle">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>About</span>
+    </mat-toolbar-row>
+  </mat-toolbar> -->
+  <router-outlet></router-outlet>
+  <!-- <!-- <mat-drawer-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Sidenav mode</mat-label>
+      <mat-select #mode value="push">
+        <mat-option value="side">Side</mat-option>
+        <mat-option value="over">Over</mat-option>
+        <mat-option value="push">Push</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Has backdrop</mat-label>
+      <mat-select #hasBackdrop>
+        <mat-option>Unset</mat-option>
+        <mat-option [value]="true">True</mat-option>
+        <mat-option [value]="false">False</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
+  </mat-drawer-content> -->
+</mat-drawer-container>

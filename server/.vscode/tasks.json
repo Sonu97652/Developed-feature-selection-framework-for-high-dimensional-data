@@ -1,0 +1,23 @@
+{
+    // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+    "version": "1.0.0",
+    "tasks": [
+      {
+        "label": "Django Server",
+        "type": "shell",
+        "command": "../.env/Scripts/python manage.py runserver",
+        "presentation": {
+            "echo": true,
+            "reveal": "never",
+            "focus": false,
+            "panel": "shared",
+            "showReuseMessage": true,
+            "clear": false
+        },
+        "runOptions": {
+            "runOn": "folderOpen"
+        }
+    }
+    ]
+  }
+  

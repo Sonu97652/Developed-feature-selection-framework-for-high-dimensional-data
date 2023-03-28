@@ -1,0 +1,21 @@
+{
+	"folders": [
+		// {
+		// 	"path": "./",
+		// 	"name": "All"
+		// },
+    {
+      "path": "./ui",
+      "name": "UI"
+    }, {
+      "path": "./workbooks",
+      "name": "Workbooks"
+    }, {
+      "path": "./server",
+      "name":"Server",
+    }, {
+      "path": "./fs",
+      "name": "Files"
+    }
+	]
+}
