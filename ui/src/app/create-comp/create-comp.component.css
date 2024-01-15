@@ -1,0 +1,11 @@
+.sr1, .sr2 {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bolder;
+    border: dotted 2px green;
+    border-radius: 5px;
+}
+
+.sr2 {
+    border: dotted 2px white;
+}

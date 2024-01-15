@@ -1,0 +1,249 @@
+<mat-stepper orientation="vertical" #stepper style="margin: 10px">
+  <mat-step>
+    <ng-template matStepLabel>
+      <ng-container>Comparison Name: {{ comparisonName }}</ng-container>
+    </ng-template>
+    <mat-form-field appearance="outline">
+      <mat-label>Enter Comparison Name</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="comp1"
+        [(ngModel)]="comparisonName"
+      />
+    </mat-form-field>
+    <br />
+    <button mat-button matStepperNext>Next</button>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>
+      <ng-container *ngIf="!selectedDataset"> Select Dataset </ng-container>
+      <ng-container *ngIf="selectedDataset"
+        >Selected Dataset : {{ selectedDataset.Name }}, cols:
+        {{ selectedDataset.Cols.length }}</ng-container
+      >
+    </ng-template>
+    <mat-form-field appearance="outline">
+      <mat-label>Select Dataset</mat-label>
+      <mat-select
+        [(value)]="selectedDataset"
+        (valueChange)="stepper.next(); updateFsModel()"
+      >
+        <mat-option *ngFor="let option of datasets" [value]="option">
+          {{ option.Name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br />
+    <button mat-button matStepperNext>Next</button>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel> Select Feature Selection Methods </ng-template>
+    <!-- <pre>{{ fsModels | json }}</pre> -->
+    <mat-accordion cdkDropList (cdkDropListDropped)="drop('feature', $event)">
+      <mat-expansion-panel
+        cdkDrag
+        cdkDragLockAxis="y"
+        *ngFor="let fsModel of fsModels"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon
+              cdkDragHandle
+              style="margin-right: 10px; cursor: n-resize"
+            >
+              drag_handle
+            </mat-icon>
+
+            <mat-checkbox
+              [(ngModel)]="fsModel.selected"
+              (click)="$event.stopPropagation()"
+            >
+              {{ fsModel.name }}
+            </mat-checkbox>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <pre>{{ fsModel.description }}</pre>
+        <ng-container *ngFor="let value of fsModel.values">
+          <ng-container *ngIf="value.type == 'range'">
+            <div class="flex-col">
+              <br />
+              <mat-label>{{ value.name }} : {{ value.value }}</mat-label>
+              <mat-slider
+                mat-form-field
+                [min]="value.range[0]"
+                [max]="value.range[1]"
+                [step]="value.range[2]"
+                thumbLabel
+                [displayWith]="formatLabel"
+                [(ngModel)]="value.value"
+              ></mat-slider>
+            </div>
+          </ng-container>
+        </ng-container>
+        <div
+          *cdkDragPlaceholder
+          style="border: dashed 2px #aaa; padding: 20px; margin: 5px"
+        >
+          Drop Item Here
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext>Next</button>
+  </mat-step>
+  <mat-step cdkDropListGroup>
+    <ng-template matStepLabel> Select Comparison models </ng-template>
+    <div class="flex-row" style="column-gap: 20px">
+      <div class="flex-item flex-col">
+        <h1>Regression Models</h1>
+        <mat-accordion
+            cdkDropList
+            [cdkDropListEnterPredicate]="returnFalse"
+          >
+          <ng-container *ngFor="let fsModel of cModals">
+            <mat-expansion-panel 
+             *ngIf="fsModel.type == 'regression'" cdkDrag>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon
+                    cdkDragHandle
+                    style="margin-right: 10px; cursor: n-resize"
+                  >
+                    drag_handle
+                  </mat-icon>
+                  {{ fsModel.name }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <pre style="max-width: 400px; white-space: pre-wrap">{{
+                fsModel.description
+              }}</pre>
+              <ng-container *ngFor="let value of fsModel.values">
+                <ng-container *ngIf="value.type == 'range'">
+                  <div class="flex-col">
+                    <br />
+                    <mat-label>{{ value.name }} : {{ value.value }}</mat-label>
+                    <mat-slider
+                      mat-form-field
+                      [min]="value.range[0]"
+                      [max]="value.range[1]"
+                      [step]="value.range[2]"
+                      thumbLabel
+                      [displayWith]="formatLabel"
+                      [(ngModel)]="value.value"
+                    ></mat-slider>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </div>
+      <div class="flex-item flex-col">
+        <h1>Classification Models</h1>
+        <mat-accordion>
+          <ng-container *ngFor="let fsModel of cModals">
+            <mat-expansion-panel *ngIf="fsModel.type == 'classification'">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-checkbox
+                    [(ngModel)]="fsModel.selected"
+                    (click)="$event.stopPropagation()"
+                  >
+                    {{ fsModel.name }}
+                  </mat-checkbox>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <pre style="max-width: 400px; white-space: pre-wrap">{{
+                fsModel.description
+              }}</pre>
+              <ng-container *ngFor="let value of fsModel.values">
+                <ng-container *ngIf="value.type == 'range'">
+                  <div class="flex-col">
+                    <br />
+                    <mat-label>{{ value.name }} : {{ value.value }}</mat-label>
+                    <mat-slider
+                      mat-form-field
+                      [min]="value.range[0]"
+                      [max]="value.range[1]"
+                      [step]="value.range[2]"
+                      thumbLabel
+                      [displayWith]="formatLabel"
+                      [(ngModel)]="value.value"
+                    ></mat-slider>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </div>
+    </div>
+    <div
+      class="flex-row"
+      cdkDropList
+      (cdkDropListDropped)="drop('comparison', $event)"
+      style="padding: 10px; border: dashed 1px black"
+    >
+      <mat-accordion>
+        <ng-container *ngFor="let fsModel of selectedCModals">
+          <mat-expansion-panel cdkDrag>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon
+                  cdkDragHandle
+                  style="margin-right: 10px; cursor: n-resize"
+                >
+                  drag_handle
+                </mat-icon>
+                {{ fsModel.name }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <pre style="max-width: 400px; white-space: pre-wrap">{{
+              fsModel.description
+            }}</pre>
+            <ng-container *ngFor="let value of fsModel.values">
+              <ng-container *ngIf="value.type == 'range'">
+                <div class="flex-col">
+                  <br />
+                  <mat-label>{{ value.name }} : {{ value.value }}</mat-label>
+                  <mat-slider
+                    mat-form-field
+                    [min]="value.range[0]"
+                    [max]="value.range[1]"
+                    [step]="value.range[2]"
+                    thumbLabel
+                    [displayWith]="formatLabel"
+                    [(ngModel)]="value.value"
+                  ></mat-slider>
+                </div>
+              </ng-container>
+            </ng-container>
+            <br><br>
+            <div
+              *cdkDragPlaceholder
+              style="border: dashed 2px #aaa; padding: 20px; margin: 5px"
+            >
+              Drop Item Here
+            </div>
+          </mat-expansion-panel>
+        </ng-container>
+      </mat-accordion>
+    </div>
+    <br>
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-stroked-button matStepperNext color="accent" (click)="createComparison()" *ngIf="!result?.sr1">Compare</button>
+
+    <ng-container *ngIf="result?.sr1">
+      <div class="flex-row" style="column-gap: 20px;">
+        <div class="sr1">
+          {{result?.sr1 | number : '1.2-2'}}%
+        </div>
+        <div class="sr2">
+          {{result?.sr2 | number : '1.2-2'}}%
+        </div>
+      </div>
+    </ng-container>
+
+  </mat-step>
+</mat-stepper>
